@@ -11,8 +11,8 @@
 module Crypto.MAC.SipHash
     ( SipKey(..)
     , SipHash(..)
-    , hashWith
     , hash
+    , hashWith
     ) where
 
 import Data.Word
@@ -32,6 +32,10 @@ newtype SipHash = SipHash Word64
 
 data InternalState = InternalState {-# UNPACK #-} !Word64 {-# UNPACK #-} !Word64 {-# UNPACK #-} !Word64 {-# UNPACK #-} !Word64
 
+-- | produce a siphash with a key and a bytestring.
+hash :: SipKey -> ByteString -> SipHash
+hash = hashWith 2 4
+
 -- | same as 'hash', except also specifies the number of sipround iterations for compression and digest.
 hashWith :: Int -> Int -> SipKey -> ByteString -> SipHash
 hashWith c d key b = either error (finish d) $ runGet runHash b
@@ -47,10 +51,6 @@ hashWith c d key b = either error (finish d) $ runGet runHash b
 
           shiftAndAdd :: (Word64,Int) -> Word8 -> (Word64,Int)
           shiftAndAdd (acc,pos) v = (acc .|. ((fromIntegral v) `shiftL` pos), pos+8)
-
--- | produce a siphash with a key and a bytestring.
-hash :: SipKey -> ByteString -> SipHash
-hash = hashWith 2 4
 
 initSip (SipKey k0 k1) = InternalState (k0 `xor` 0x736f6d6570736575)
                                        (k1 `xor` 0x646f72616e646f6d)
