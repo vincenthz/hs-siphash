@@ -32,7 +32,7 @@ newtype SipHash = SipHash Word64
 
 data InternalState = InternalState {-# UNPACK #-} !Word64 {-# UNPACK #-} !Word64 {-# UNPACK #-} !Word64 {-# UNPACK #-} !Word64
 
--- | same as @hash, except also specifies the number of sipround iterations for compression and digest.
+-- | same as 'hash', except also specifies the number of sipround iterations for compression and digest.
 hashWith :: Int -> Int -> SipKey -> ByteString -> SipHash
 hashWith c d key b = either error (finish d) $ runGet runHash b
     where len = B.length b
