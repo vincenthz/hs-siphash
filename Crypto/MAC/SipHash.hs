@@ -6,7 +6,7 @@
 -- Portability : good
 --
 -- provide the SipHash algorithm.
--- reference: http://131002.net/siphash/siphash.pdf
+-- reference: <http://131002.net/siphash/siphash.pdf>
 --
 module Crypto.MAC.SipHash
     ( SipKey(..)
