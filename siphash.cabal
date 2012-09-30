@@ -1,5 +1,5 @@
 Name:                siphash
-Version:             1.0.1
+Version:             1.0.2
 Description:
     Haskell implementation of siphash. [http://131002.net/siphash/siphash.pdf]
 License:             BSD3
