@@ -15,7 +15,7 @@ Homepage:            http://github.com/vincenthz/hs-siphash
 data-files:          README.md
 
 Library
-  Build-Depends:     base >= 4 && < 6, bytestring, cereal
+  Build-Depends:     base >= 4 && < 6, bytestring, cpu
   Exposed-modules:   Crypto.MAC.SipHash
 
 Test-Suite test-siphash
