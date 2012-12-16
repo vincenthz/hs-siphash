@@ -7,25 +7,25 @@ algorithm.
 Install
 -------
 
-    cabal install sighash
+    cabal install siphash
 
 Usage
 -----
 
-sighash-2-4:
+siphash-2-4:
 
-    import Crypto.MAC.SigHash (hash)
+    import Crypto.MAC.SipHash (hash)
     import qualified Data.ByteString.Char8 as B
     
     k0 = 0xaaaaaaaaaaaaaaaa
     k1 = 0xbbbbbbbbbbbbbbbb
-    tag = hash (SigKey k0 k1) (B.pack "my text to hash")
+    tag = hash (SipKey k0 k1) (B.pack "my text to hash")
 
-sighash-c-d:
+siphash-c-d:
 
-    import Crypto.MAC.SigHash (hash)
+    import Crypto.MAC.SipHash (hash)
     import qualified Data.ByteString.Char8 as B
     
     k0 = 0xaaaaaaaaaaaaaaaa
     k1 = 0xbbbbbbbbbbbbbbbb
-    tag = hashWith nbCompressionRounds nbDigestRounds (SigKey k0 k1) (B.pack "my text to hash")
+    tag = hashWith nbCompressionRounds nbDigestRounds (SipKey k0 k1) (B.pack "my text to hash")
