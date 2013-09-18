@@ -44,66 +44,66 @@ hash = hashWith 2 4
 -- | same as 'hash', except also specifies the number of sipround iterations for compression and digest.
 hashWith :: Int -> Int -> SipKey -> ByteString -> SipHash
 hashWith c d key (PS ps s fl) = inlinePerformIO $ withForeignPtr ps (\ptr -> runHash (initSip key) (ptr `plusPtr` s) fl)
-    where runHash !st !ptr l
-                | l > 7     = fromLE64 `fmap` peek (castPtr ptr) >>= \v -> runHash (process st v) (ptr `plusPtr` 8) (l-8)
-                | otherwise = do
-                    let !lengthBlock = (fromIntegral fl `mod` 256) `unsafeShiftL` 56
-                    (finish . process st) `fmap` case l of
-                        0 -> do return lengthBlock
-                        1 -> do v0 <- peekByteOff ptr 0
-                                return (lengthBlock .|. to64 v0)
-                        2 -> do (v0,v1) <- liftM2 (,) (peekByteOff ptr 0) (peekByteOff ptr 1)
-                                return (lengthBlock
-                                        .|. (to64 v1 `unsafeShiftL` 8)
-                                        .|. to64 v0)
-                        3 -> do (v0,v1,v2) <- liftM3 (,,) (peekByteOff ptr 0) (peekByteOff ptr 1) (peekByteOff ptr 2)
-                                return (    lengthBlock
-                                        .|. (to64 v2 `unsafeShiftL` 16)
-                                        .|. (to64 v1 `unsafeShiftL` 8)
-                                        .|. to64 v0)
-                        4 -> do (v0,v1,v2,v3) <- liftM4 (,,,) (peekByteOff ptr 0) (peekByteOff ptr 1) (peekByteOff ptr 2)
-                                                              (peekByteOff ptr 3)
-                                return (    lengthBlock
-                                        .|. (to64 v3 `unsafeShiftL` 24)
-                                        .|. (to64 v2 `unsafeShiftL` 16)
-                                        .|. (to64 v1 `unsafeShiftL` 8)
-                                        .|. to64 v0)
-                        5 -> do (v0,v1,v2,v3,v4) <- liftM5 (,,,,) (peekByteOff ptr 0) (peekByteOff ptr 1) (peekByteOff ptr 2)
-                                                                  (peekByteOff ptr 3) (peekByteOff ptr 4)
-                                return (    lengthBlock
-                                        .|. (to64 v4 `unsafeShiftL` 32)
-                                        .|. (to64 v3 `unsafeShiftL` 24)
-                                        .|. (to64 v2 `unsafeShiftL` 16)
-                                        .|. (to64 v1 `unsafeShiftL` 8)
-                                        .|. to64 v0)
-                        6 -> do v0 <- peekByteOff ptr 0
-                                v1 <- peekByteOff ptr 1
-                                v2 <- peekByteOff ptr 2
-                                v3 <- peekByteOff ptr 3
-                                v4 <- peekByteOff ptr 4
-                                v5 <- peekByteOff ptr 5
-                                return (    lengthBlock
-                                        .|. (to64 v5 `unsafeShiftL` 40)
-                                        .|. (to64 v4 `unsafeShiftL` 32)
-                                        .|. (to64 v3 `unsafeShiftL` 24)
-                                        .|. (to64 v2 `unsafeShiftL` 16)
-                                        .|. (to64 v1 `unsafeShiftL` 8)
-                                        .|. to64 v0)
-                        7 -> do v0 <- peekByteOff ptr 0
-                                v1 <- peekByteOff ptr 1
-                                v2 <- peekByteOff ptr 2
-                                v3 <- peekByteOff ptr 3
-                                v4 <- peekByteOff ptr 4
-                                v5 <- peekByteOff ptr 5
-                                v6 <- peekByteOff ptr 6
-                                return (    lengthBlock
-                                        .|. (to64 v6 `unsafeShiftL` 48)
-                                        .|. (to64 v5 `unsafeShiftL` 40)
-                                        .|. (to64 v4 `unsafeShiftL` 32)
-                                        .|. (to64 v3 `unsafeShiftL` 24)
-                                        .|. (to64 v2 `unsafeShiftL` 16)
-                                        .|. (to64 v1 `unsafeShiftL` 8)
-                                        .|. to64 v0)
+  where runHash !st !ptr l
+            | l > 7     = fromLE64 `fmap` peek (castPtr ptr) >>= \v -> runHash (process st v) (ptr `plusPtr` 8) (l-8)
+            | otherwise = do
+                let !lengthBlock = (fromIntegral fl `mod` 256) `unsafeShiftL` 56
+                (finish . process st) `fmap` case l of
+                    0 -> do return lengthBlock
+                    1 -> do v0 <- peekByteOff ptr 0
+                            return (lengthBlock .|. to64 v0)
+                    2 -> do (v0,v1) <- liftM2 (,) (peekByteOff ptr 0) (peekByteOff ptr 1)
+                            return (lengthBlock
+                                    .|. (to64 v1 `unsafeShiftL` 8)
+                                    .|. to64 v0)
+                    3 -> do (v0,v1,v2) <- liftM3 (,,) (peekByteOff ptr 0) (peekByteOff ptr 1) (peekByteOff ptr 2)
+                            return (    lengthBlock
+                                    .|. (to64 v2 `unsafeShiftL` 16)
+                                    .|. (to64 v1 `unsafeShiftL` 8)
+                                    .|. to64 v0)
+                    4 -> do (v0,v1,v2,v3) <- liftM4 (,,,) (peekByteOff ptr 0) (peekByteOff ptr 1) (peekByteOff ptr 2)
+                                                          (peekByteOff ptr 3)
+                            return (    lengthBlock
+                                    .|. (to64 v3 `unsafeShiftL` 24)
+                                    .|. (to64 v2 `unsafeShiftL` 16)
+                                    .|. (to64 v1 `unsafeShiftL` 8)
+                                    .|. to64 v0)
+                    5 -> do (v0,v1,v2,v3,v4) <- liftM5 (,,,,) (peekByteOff ptr 0) (peekByteOff ptr 1) (peekByteOff ptr 2)
+                                                              (peekByteOff ptr 3) (peekByteOff ptr 4)
+                            return (    lengthBlock
+                                    .|. (to64 v4 `unsafeShiftL` 32)
+                                    .|. (to64 v3 `unsafeShiftL` 24)
+                                    .|. (to64 v2 `unsafeShiftL` 16)
+                                    .|. (to64 v1 `unsafeShiftL` 8)
+                                    .|. to64 v0)
+                    6 -> do v0 <- peekByteOff ptr 0
+                            v1 <- peekByteOff ptr 1
+                            v2 <- peekByteOff ptr 2
+                            v3 <- peekByteOff ptr 3
+                            v4 <- peekByteOff ptr 4
+                            v5 <- peekByteOff ptr 5
+                            return (    lengthBlock
+                                    .|. (to64 v5 `unsafeShiftL` 40)
+                                    .|. (to64 v4 `unsafeShiftL` 32)
+                                    .|. (to64 v3 `unsafeShiftL` 24)
+                                    .|. (to64 v2 `unsafeShiftL` 16)
+                                    .|. (to64 v1 `unsafeShiftL` 8)
+                                    .|. to64 v0)
+                    7 -> do v0 <- peekByteOff ptr 0
+                            v1 <- peekByteOff ptr 1
+                            v2 <- peekByteOff ptr 2
+                            v3 <- peekByteOff ptr 3
+                            v4 <- peekByteOff ptr 4
+                            v5 <- peekByteOff ptr 5
+                            v6 <- peekByteOff ptr 6
+                            return (    lengthBlock
+                                    .|. (to64 v6 `unsafeShiftL` 48)
+                                    .|. (to64 v5 `unsafeShiftL` 40)
+                                    .|. (to64 v4 `unsafeShiftL` 32)
+                                    .|. (to64 v3 `unsafeShiftL` 24)
+                                    .|. (to64 v2 `unsafeShiftL` 16)
+                                    .|. (to64 v1 `unsafeShiftL` 8)
+                                    .|. to64 v0)
 
           {-# INLINE to64 #-}
           to64 :: Word8 -> Word64
